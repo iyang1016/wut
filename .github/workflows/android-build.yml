@@ -1,0 +1,43 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Java
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'zulu'
+        java-version: '11'
+
+    - name: Set up .NET SDK
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Build NetWarden
+      run: cd NetWarden && dotnet publish -c Release
+
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.16.9'
+
+    - name: Install Flutter dependencies
+      run: cd net_shaper && flutter pub get
+
+    - name: Build Android APK
+      run: cd net_shaper && flutter build apk
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v2
+      with:
+        name: net-shaper-apk
+        path: net_shaper/build/app/outputs/flutter-apk/app-release.apk
