@@ -11,9 +11,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Clone NetWarden
-      run: git clone https://github.com/amdzy/NetWarden.git
-
     - name: Set up Java
       uses: actions/setup-java@v2
       with:
